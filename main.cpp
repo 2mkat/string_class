@@ -1,15 +1,14 @@
 #include <iostream>
-#include "library.h"
-#include "library.cpp"
+#include "l_string.h"
+#include "l_string.cpp"
 
 int main(){
 
-    String str("world");
-    String str2("world");
+    String str("FGYTFGYHFFGGTT");
+    String str2("FGYTFGYHFFGGTT");
 
-    String res;
-    res(2, 4);
-    cout << res;
+    cout << str.kmp_search(str2);
+
 
     return 0;
 }
