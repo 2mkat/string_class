@@ -1,5 +1,5 @@
-#ifndef STRING_PROJECT_LIBRARY_H
-#define STRING_PROJECT_LIBRARY_H
+#ifndef STRING_PROJECT_L_STRING_H
+#define STRING_PROJECT_L_STRING_H
 
 #pragma once
 
@@ -45,7 +45,7 @@ public:
 
     int  bin_search(String& c1);
 
-    int kmp_search(String&);
+    int kmp_search(String& c1);
 };
 
-#endif //STRING_PROJECT_LIBRARY_H
+#endif //STRING_PROJECT_L_STRING_H
