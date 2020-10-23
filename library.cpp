@@ -1,4 +1,5 @@
-#include "library.h"
+#include "l_string.h"
+#include <vector>
 
 using namespace std;
 
@@ -128,36 +129,36 @@ String String::operator() (int pointer1, int pointer2){
 
     return res;
 }
-/*
+
 //БМ-поиск
 int String::bin_search(String &c1){
-    int table[256];
+    vector<int> table;
 
     //инициализируем все элементы таблицы длинной образца
     for (int i = 0; i < 256; i++){
-        table[i] = c1.len;
+        table.push_back(c1.len);
     }
 
     //заполнение таблицы
     int i = 0;
-    while (i< c1.len-1){
+    while (i < c1.len-1){
         table[c1.str[i]] = c1.len - 1 - i;
         i++;
     }
 
-    //сам БМ-поиск
     int j = c1.len - 1;
     i = c1.len - 1;
 
+    //алгоритм БМ-поиска
     while (i<len && j >= 0){
-        int k = i; j = c1.len - 1;
+        int k = i;
+        j = c1.len - 1;
 
         while (j>=0){
             if (str[k]==c1.str[j]){
                 j--; k--;
             }
-
-                //если символы не равны то делаем сдвиг согласно таблице
+            //если символы не равны то делаем сдвиг согласно таблице
             else{
                 i = i + table[str[i]];
                 j = c1.len - 1;
@@ -165,50 +166,49 @@ int String::bin_search(String &c1){
             }
         }
     }
-
     //возврат позиции
     //если не найдено	-1
     //если найдено		i + 1 - original.len
-    if (j>=0){
-        return -1;
-    }
-    else{
-        return i + 1 - c1.len;
-    }
+
+    return (j >= 0) ? -1 : i + 1 - c1.len;
 }
 
 int String::kmp_search(String& c1){
-    int* array = new int[c1.len];
+    int* newj = new int[c1.len];
     int k = -1,
         j = 0;
 
-    array[0] = -1;
+    newj[0] = -1;
 
     //заполнение массива NewJ для образца
     while (j < c1.len - 1){
         if (k >= 0 && c1.str[j] != c1.str[k]){
-            k = array[k];
+            k = newj[k];
         }
         else{
             k++; j++;
 
             if (c1.str[j] == c1.str[k]){
-                array[j] = array[k];
+                newj[j] = newj[k];
             }
             else{
-                array[j] = k;
+                newj[j] = k;
             }
         }
     }
 
-    int i = 0; j = 0;
+    for(int p = 0; p < c1.len; ++p){
+        cout << newj[p];
+    }
+    cout << endl;
 
-    //сам КМП-поиск
-    while (j< c1.len){
+    int i = 0; j = 0;
+    //алгоритм КМП-поиск
+    while (j < c1.len){
         //проверка выхода за границы
-        if (!(i<len)){
-            delete[] array;
-            array = nullptr;
+        if (!(i < len)){
+            delete[] newj;
+            newj = nullptr;
             return -1;
         }
 
@@ -223,15 +223,15 @@ int String::kmp_search(String& c1){
                 break;
             }
 
-            j = array[j];
+            j = newj[j];
         }
     }
 
-    delete[]array;
-    array = nullptr;
+    delete[] newj;
+    newj = nullptr;
 
     return i - c1.len;
-}*/
+}
 
 std::ostream& operator<< (ostream& out, String& c1){
     for (int i = 0; i < c1.len; i++){
