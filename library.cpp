@@ -23,28 +23,28 @@ String::String(int len_){
 String::String(const char* str_) {
     int len = Len(str_);
 
-    this->str = new char[len + 1];   //+1 символ так как нужно место в массиве под терминирующий 0
+    str = new char[len + 1];   //+1 символ так как нужно место в массиве под терминирующий 0
     for (int i = 0; i < len; ++i) {   //копируем символы строки в массив нашего класса
-        this->str[i] = str_[i];
+        str[i] = str_[i];
     }
-    this->str[len + 1] = '\0';
+    str[len + 1] = '\0';
 }
 
 //конструктор копирования, необходим для создании точной копи объекта класса но в другой области памяти
 String::String(const String &c1) {
     int length = Len(c1.str);
-    this->str = new char[length + 1];
+    str = new char[length + 1];
 
     for (int i = 0; i < length; i++){
-        this->str[i] = c1.str[i];
+        str[i] = c1.str[i];
     }
 
-    this->str[length] = '\0';
+    str[length] = '\0';
 }
 
 // деструктор, отвечает за освобождение ресурвов занятых объектом, вызывается при уничтожении объекта класса
 String:: ~String() {
-    delete[] this->str;
+    delete[] str;
 }
 
 char& String::operator[] (int index){
@@ -52,16 +52,21 @@ char& String::operator[] (int index){
 }
 
 String& String::operator= (const String& c1) {
-    if(this->str != nullptr) {
+
+    if (this==&c1){
+        return *this;
+    }
+
+    if(str != nullptr) {
         delete[] str;
     }
 
     int length = Len(c1.str);
-    this->str = new char[length + 1];
+    str = new char[length + 1];
     for (int i = 0; i < length; ++i) {
-        this->str[i] = c1.str[i];
+       str[i] = c1.str[i];
     }
-    this->str[len + 1] = '\0';
+    str[len + 1] = '\0';
 
     return *this;
 }
@@ -88,7 +93,7 @@ String& String::operator+= (String& c1) {
 
     res[length] = '\0';
 
-    if(this->str != nullptr) {
+    if(str != nullptr) {
         delete[] str;
     }
 
@@ -111,20 +116,6 @@ String String::operator+ (const String& c1){
         res.str[this->len + j] = c1.str[j];
     }
 
-    res.str[res.len] = '\0';
-
-    return res;
-}
-
-//выделяет подстроку из исходной строки с i-ого по j-ый символ
-String String::operator() (int pointer1, int pointer2){
-    String res;
-    res.len = pointer2 - pointer1;
-    res.str = new char[res.len + 1];
-
-    for(int i = pointer1, j = 0; i <= pointer2; ++i, ++j){
-        res[j] = str[i];
-    }
     res.str[res.len] = '\0';
 
     return res;
@@ -197,29 +188,30 @@ int String::kmp_search(String& c1){
         }
     }
 
-    for(int p = 0; p < c1.len; ++p){
+    /*for(int p = 0; p < c1.len; ++p){
         cout << newj[p];
     }
-    cout << endl;
+    cout << endl;*/
 
     int i = 0; j = 0;
     //алгоритм КМП-поиск
     while (j < c1.len){
         //проверка выхода за границы
-        if (!(i < len)){
+        if (i > len){
             delete[] newj;
-            newj = nullptr;
             return -1;
         }
 
         while (true){
-            if (!(j >= 0)){
-                i++; j++;
+            if (j < 0){
+                i++;
+                j++;
                 break;
             }
 
-            if (!(str[i] != c1.str[j])){
-                i++; j++;
+            if (str[i] == c1.str[j]){
+                i++;
+                j++;
                 break;
             }
 
@@ -228,7 +220,6 @@ int String::kmp_search(String& c1){
     }
 
     delete[] newj;
-    newj = nullptr;
 
     return i - c1.len;
 }
